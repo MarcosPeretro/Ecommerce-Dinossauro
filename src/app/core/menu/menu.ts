@@ -14,10 +14,9 @@ export class Menu {
   protected cartActive: boolean = false;
 
   constructor(private dinoService: DinoService){
-    this.dinoService.
+
   }
 
   protected showCart(){
-    this.cart
   }
 }

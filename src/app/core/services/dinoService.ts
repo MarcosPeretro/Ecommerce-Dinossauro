@@ -1,53 +1,63 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-
+import { Observable, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 
 export class DinoService {
-  
-  private productsSubject: BehaviorSubject<Array<ProductOnCartType>> = new BehaviorSubject<Array<ProductOnCartType>>([]);
+  private productsMustBeReloadedSubject: Subject<boolean> = new Subject();
 
-  public getProducts(): Observable<Array<DinoType>> {
-    return this.productsSubject.asObservable();
+  constructor(private http: HttpClient, private router: Router) {}
+
+  public reloadProductList() {
+    this.productsMustBeReloadedSubject.next(true);
+  }
+  public getAll(): Observable<any> {
+    return this.http.get('http://localhost:3000/dinoProduto');
   }
 
-  public getProductById(id: number): any{
-    const products = this.productsSubject.getValue();
-    return products.find((item: DinoType) => item.id == id);
+  public get(id: number): any {
+    return this.http.get(`http://localhost:3000/dinoProduto/${id}`);
   }
 
-  public deleteProductById(id: number): any{
-    const products = this.productsSubject.getValue().filter((item: DinoType) => item.id != id);
-    this.productsSubject.next(products);
+  public delete(id: number): any {
+    return this.http.delete(`http://localhost:3000/dinoProduto/${id}`);
   }
 
-  public addProduct(value: Partial<DinoType>){
-    let maxId = 0;
-    const products = this.productsSubject.getValue();
-    products.forEach((el) => {
-      if (el.id > maxId) {
-        maxId = el.id;
-      }
+  public AddDino(value: Partial<DinoType>) {
+    this.getAll().subscribe((products) => {
+      let maxId = 0;
+      products.forEach((element: any) => {
+        if (element.id > maxId) {
+          maxId = element.id;
+        }
+      });
+      maxId = maxId+1;
+
+      value.id = `${maxId}`;
+      this.http.post("http://localhost:3000/dinoProduto", value).subscribe(() => {
+        alert("Produto inserido!");
+        this.reloadProductList();
+        this.router.navigate(["/dinoProduto"]);
+      })
+      
     });
 
-    value.id = maxId+1;
-    products.push(value as DinoType);
-    this.productsSubject.next(products);
-      
-  } 
+    
+  }
 }
 
-  export interface DinoType{
-  id: number;
+export interface DinoType {
+  id: string;
   title: string;
   text: string;
   price: number;
   image: string;
-  }
+}
 
-  export interface ProductOnCartType extends DinoType {
+export interface ProductOnCartType extends DinoType {
   quantity?: number;
   observations?: string;
 }
