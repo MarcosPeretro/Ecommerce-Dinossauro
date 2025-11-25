@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Produto } from '../produto/produto';
-import { DinoType } from '../../core/services/dinoService';
+import { DinoService, DinoType } from '../../core/services/dinoService';
 import { Title } from '@angular/platform-browser';
 
 
@@ -14,7 +14,17 @@ export class ProdutosLista {
 
   protected dinoProducts: Array<DinoType> = [];
 
-  constructor(){
-   
+  constructor(private dinoService: DinoService){
+   this.loadData();
+
+   this.dinoService.productsMustBeReloaded().subscribe(() => {
+    this.loadData();
+   })
+  }
+
+  private loadData() {
+    this.dinoService.getAll().subscribe((dino: Array<DinoType>) =>  {
+      this.dinoProducts = dino;
+    });
   }
 }

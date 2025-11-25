@@ -1,10 +1,17 @@
 <nav class="w-full bg-red-500 p-4 flex justify-between">
-    <div class="text-2xl text-red-600 font-bold bg-white">
-        Linkin Park
+    <div class="text-2xl text-red-600 font-bold bg-black">
+        <a class="text-red-300 p-3 " [routerLink]="['']">Linkin Park</a>
     </div>
+
     <div>
-        <a class="text-white p-3 hover:bg-red-700" [routerLink]="['']">Inicio</a>
-        <a class="text-white p-3 hover:bg-red-700" [routerLink]="['produtos']">Produtos</a>
-        <a class="text-white p-3 hover:bg-red-700" [routerLink]="['carrinho']">Container</a>
+        <a class="text-white p-3 hover:bg-red-700 hover:text-yellow-100 transition-colors duration-200" [routerLink]="['produtos']">Produtos</a>
+        <a class="text-white p-3 hover:bg-red-700 hover:text-yellow-100 transition-colors duration-200" [routerLink]="['cadastro']">Cadastro de dinossauro</a>
+        <a class="text-white p-3 hover:bg-red-700 hover:text-yellow-100 transition-colors duration-200" [routerLink]="['carrinho']">Container</a>
     </div>
+
+    <span
+      class="absolute top-1 -right-0 bg-black text-white rounded-full w-4 h-4 flex items-center justify-center text-xs"
+    >
+      {{ dinoQtd }}
+    </span>
 </nav>
